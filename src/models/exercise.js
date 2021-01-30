@@ -19,7 +19,7 @@ exerciseSchema.methods.toJSON = function () {
     //removes properties from the JSON returned object
     const exercise = this
     const exObj = exercise.toObject()
-    exObj.date = moment(new Date(exObj.date)).format('ddd MMM DD YYYY')
+    exObj.date = moment.utc(new Date(exObj.date)).format('ddd MMM DD YYYY')
     delete exObj.__v
     delete exObj._id
     return exObj

@@ -50,6 +50,8 @@ app.post('/api/exercise/add', async (req,res) => {
     const exercise = new Exercise(req.body)
     if (!exercise.date) {
         exercise.date = moment.utc(new Date()).toDate()
+    } else {
+        exercise.date = moment.utc(exercise.date, 'YYYY-MM-DD', true).toDate()
     }
     try {
         const user = await User.findById(exercise.userId)
@@ -57,7 +59,7 @@ app.post('/api/exercise/add', async (req,res) => {
             return res.status(400).send({error: 'user does not exist'})
         }
         await exercise.save()
-        res.status(201).send({...exercise._doc, username: user.username, userId: undefined, _id: user._id  })
+        res.status(201).send({...exercise.toJSON(), username: user.username, userId: undefined, _id: user._id, __v: undefined  })
     } catch (e) {
         res.status(400).send(e)
     }
